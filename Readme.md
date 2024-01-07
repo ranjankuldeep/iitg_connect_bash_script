@@ -1,4 +1,5 @@
-You can run script either Manually or As a Cron jobs or As a Systemd service. 
+IITG Network login bash script. \
+Run script either Manually or As a Cron jobs or As a Systemd service. 
 
 ## Dependency:
   1. Bash Shell (defautl in linux)
