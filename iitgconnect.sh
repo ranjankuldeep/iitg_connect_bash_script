@@ -51,8 +51,8 @@ req_url="https://agnigarh.iitg.ac.in:1442/login?"
 form_url="https://agnigarh.iitg.ac.in:1442/"
 
 # User Credentials
-username=""      # Specify username here
-password=""   # Specify password here
+username="r.kuldeep"      # Specify username here
+password="KULDeep@1234"   # Specify password here
 
 
 prog_name=⁠ basename $0 ⁠
@@ -79,12 +79,15 @@ while true; do
   done
   echo "Connected.....";
 
-  magic=$(cat $TMP_FILE | grep -o "magic.>" | grep -o "=.>" |tr -d '\">=');
+  # magic=$(cat $TMP_FILE | grep -o "magic.>" | grep -o "=.>" |tr -d '\">='); # for linux
+  magic=$(grep -o 'name="magic" value="[^"]*' $TMP_FILE | awk -F'"' '{print $4}') # FOR mac
 
-  tredir=$(cat $TMP_FILE | grep -o "4Tredir.>" | grep -o "=.>" |tr -d '\">=');
+  # tredir=$(cat $TMP_FILE | grep -o "4Tredir.>" | grep -o "=.>" |tr -d '\">='); # for linux
+  tredir=$(grep -o 'name="4Tredir" value="[^"]*' $TMP_FILE | awk -F'"' '{print $4}') # for mac
 
-  until $(curl -k -L -o $TMP_FILE -d "4Tredir=$tredir" -d "username=$user" -d 'submit=Continue' -d "password=$pass" -d "magic=$magic" "${form_url}" > /dev/null 2>&1); do
+  until $(curl -k --insecure -v -L -o $TMP_FILE -d "4Tredir=$tredir" -d "username=$user" -d 'submit=Continue' -d "password=$pass" -d "magic=$magic" "${form_url}" > /dev/null 2>&1); do
     echo "Logging In.....";
+    sleep 5;
   done
 
   ka_url=$(cat $TMP_FILE | grep -o 'https://[^"]*' | awk 'NR==1{print}');
