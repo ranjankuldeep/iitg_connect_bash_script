@@ -51,8 +51,8 @@ req_url="https://agnigarh.iitg.ac.in:1442/login?"
 form_url="https://agnigarh.iitg.ac.in:1442/"
 
 # User Credentials
-username=""      # Specify username here
-password=""   # Specify password here
+username="r.kuldeep"      # Specify username here
+password="KULDeep@1234"   # Specify password here
 
 
 prog_name=⁠ basename $0 ⁠
@@ -61,8 +61,8 @@ TMP_FILE="/tmp/vw.tmp.html"
 
 rm $TMP_FILE  > /dev/null 2>&1;
 
-trap '(echo "Exiting....." && echo "Logged Out" && curl  -k -o $TMP_FILE "$url"  > /dev/null 2>&1 && killall $prog_name ); exit 0;' SIGTERM
-trap '(echo "Exiting....." && echo "Logged Out" && curl  -k -o $TMP_FILE "$url"  > /dev/null 2>&1 && killall $prog_name ); exit 0;' SIGINT
+trap '(echo "Exiting....." && echo "Logged Out" && curl -k -o $TMP_FILE "$url"  > /dev/null 2>&1 && killall $prog_name ); exit 0;' SIGTERM
+trap '(echo "Exiting....." && echo "Logged Out" && curl -k -o $TMP_FILE "$url"  > /dev/null 2>&1 && killall $prog_name ); exit 0;' SIGINT
 
 while true; do
   if [[ -z  $logged ]]; then
@@ -73,18 +73,26 @@ while true; do
 
   re_url=$(curl -Lsk -o /dev/null -w %{url_effective} $url);
 
-  until $(curl  -k -o $TMP_FILE "$req_url"  > /dev/null 2>&1); do
+#   until $(curl -k -o $TMP_FILE "$req_url" > /dev/null 2>&1); do
+  until $(curl -k -o $TMP_FILE "$req_url"); do
     echo "Connecting.....";
     sleep 5;
   done
+  echo "$curl_output";
+  
   echo "Connected.....";
+#   updated the file according to the ubunut x86_64 architecture
+#   magic=$(cat $TMP_FILE | grep -o "magic.>" | grep -o "=.>" |tr -d '\">=');
+#   tredir=$(cat $TMP_FILE | grep -o "4Tredir.>" | grep -o "=.>" |tr -d '\">=');
 
-  magic=$(cat $TMP_FILE | grep -o "magic.>" | grep -o "=.>" |tr -d '\">=');
+    value=$(cat $TMP_FILE | grep -o 'value="[^"]*"' | sed 's/value="\([^"]*\)"/\1/')
 
-  tredir=$(cat $TMP_FILE | grep -o "4Tredir.>" | grep -o "=.>" |tr -d '\">=');
+    magic=$(echo $value | cut -d ' ' -f 2)
+    tredir=$(echo $value | cut -d ' ' -f 1)
 
   until $(curl -k -L -o $TMP_FILE -d "4Tredir=$tredir" -d "username=$user" -d 'submit=Continue' -d "password=$pass" -d "magic=$magic" "${form_url}" > /dev/null 2>&1); do
     echo "Logging In.....";
+    sleep 1;
   done
 
   ka_url=$(cat $TMP_FILE | grep -o 'https://[^"]*' | awk 'NR==1{print}');
