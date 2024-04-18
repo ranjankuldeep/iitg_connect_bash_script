@@ -52,7 +52,7 @@ form_url="https://agnigarh.iitg.ac.in:1442/"
 
 # User Credentials
 username="r.kuldeep"      # Specify username here
-password="KULDeep@1234"   # Specify password here
+password=""   # Specify password here
 
 
 prog_name=⁠ basename $0 ⁠
